@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Auto Dashboard — Cinematic</title>
+
+  <!-- libs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Landing / Splash -->
+  <div id="landing" class="landing">
+    <div class="landing-inner">
+      <!-- inline SVG logo -->
+      <div class="landing-logo" aria-hidden="true">
+        <svg width="90" height="90" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg" x1="0" x2="1">
+              <stop offset="0" stop-color="#2E8B57"/>
+              <stop offset="1" stop-color="#f0b429"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" rx="12" fill="url(#lg)"/>
+          <path d="M18 42 L28 22 L38 42 Z" fill="#001017" opacity="0.95"/>
+          <circle cx="46" cy="20" r="6" fill="#001017" opacity="0.85"/>
+        </svg>
+      </div>
+      <h1>Auto Dashboard Creator</h1>
+      <p class="subtitle">Instant, cinematic dashboards — upload a file to get started.</p>
+      <div class="landing-actions">
+        <button class="btn primary" id="enterBtn">Enter Dashboard</button>
+        <label class="file-choose btn subtle">
+          Upload now
+          <input id="fileInputLanding" type="file" accept=".csv,.xlsx,.xls" style="display:none">
+        </label>
+      </div>
+      <div class="landing-foot">Professional analytics — auto-detects KPIs & visual types</div>
+    </div>
+  </div>
+
+  <!-- Dashboard app shell (initially hidden until landing dismissed) -->
+  <div id="app" class="app-shell hidden">
+    <aside class="left-pane card">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#2E8B57"/>
+                <stop offset="1" stop-color="#f0b429"/>
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="12" fill="url(#g1)"/>
+            <path d="M20 40 L28 24 L36 40 Z" fill="#001017" opacity="0.95"/>
+            <circle cx="46" cy="22" r="6" fill="#001017" opacity="0.85"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="app-name">Auto Dashboard</div>
+          <div class="app-sub">Cinematic Analytics</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label class="file-label">Upload Excel / CSV</label>
+        <input id="fileInput" type="file" accept=".csv,.xlsx,.xls" />
+        <p class="note">Examples: Sales, Revenue, Profit, Customer, Date, Region</p>
+      </div>
+
+      <div class="card small">
+        <div class="section-title">Quick Themes</div>
+        <div class="theme-grid">
+          <button class="theme-swatch" onclick="setTheme('#2E8B57','#f0b429')" title="Business"></button>
+          <button class="theme-swatch" onclick="setTheme('#4682B4','#ffb347')" title="Sales"></button>
+          <button class="theme-swatch" onclick="setTheme('#6A5ACD','#00CED1')" title="Customer"></button>
+          <button class="theme-swatch" onclick="setTheme('#FF6B6B','#FFD166')" title="Contrast"></button>
+
+          <!-- COMPANY THEME SWATCH (MLK Community Healthcare) -->
+          <button class="theme-swatch company" onclick="setCompanyTheme()" title="MLK Community Healthcare"></button>
+        </div>
+      </div>
+
+      <div class="card small">
+        <div class="section-title">Filters</div>
+        <div id="slicers" class="slicers"></div>
+      </div>
+
+      <div class="card small">
+        <button class="btn primary" onclick="openInPowerBI()">Open in Power BI</button>
+      </div>
+    </aside>
+
+    <main class="main-pane">
+      <header class="hero card">
+        <div class="hero-left">
+          <h1>Executive Dashboard</h1>
+          <p class="muted">Auto-generated visuals. Arrange reduced to types: Time Series, Bars, Donuts, Tables.</p>
+        </div>
+        <div class="hero-right" id="kpiArea">
+          <!-- KPI cards injected here -->
+        </div>
+      </header>
+
+      <!-- Visual area arranged by category -->
+      <section id="visualArea" class="visual-grid card">
+        <h2 class="section-heading">Time Series</h2>
+        <div id="timeSeries" class="chart-row"></div>
+
+        <h2 class="section-heading">Bar Charts</h2>
+        <div id="barCharts" class="chart-row"></div>
+
+        <h2 class="section-heading">Donut / Pie Charts</h2>
+        <div id="donutCharts" class="chart-row"></div>
+
+        <h2 class="section-heading">Tables</h2>
+        <div id="tableCharts" class="chart-row"></div>
+      </section>
+
+      <section class="card">
+        <h3>Data Table Preview</h3>
+        <div id="tablePreview" class="table-preview"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
